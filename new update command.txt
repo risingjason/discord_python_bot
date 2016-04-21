@@ -1,0 +1,1 @@
+pip install --upgrade https://github.com/Rapptz/discord.py/zipball/async/
