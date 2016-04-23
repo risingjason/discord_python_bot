@@ -28,7 +28,7 @@ async def on_ready():
 	for channel in client.get_all_channels():
 		if channel.type is discord.ChannelType.text: #notifies all registered text channels that the bot is online
 			print("Bot is running on server: {}, name: {}, id: {}, type: {}".format(channel.server, channel.name.encode("utf-8"), channel.id, channel.type))
-			#await client.send_message(channel, online_message)
+			await client.send_message(channel, online_message)
 
 @client.event
 async def on_message(msg):
