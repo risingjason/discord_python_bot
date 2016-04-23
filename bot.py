@@ -13,8 +13,8 @@ fp_infos.close()
 
 client = discord.Client()
 
-#online_message = "```Chinatown Discord Bot is now online!\n" +\
-#				 "Type !help for a list of commands.```"
+online_message = "```Chinatown Discord Bot v1.1 is now online!\n" +\
+				 "Type !help for a list of commands.```"
 
 
 fp_kappa = open("kappaLibrary.txt", "r")
@@ -35,6 +35,7 @@ async def on_message(msg):
 	cmds = msg.content.split(' ') # seperates the message word by word
 	cmd = cmds[0].lower() # takes the first word (most commands are called using the first word of message)
 	mentions = msg.raw_mentions
+
 
 	if cmd in core.commands:
 		await core.commands[cmd](client, msg, cmds)
