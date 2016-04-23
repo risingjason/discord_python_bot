@@ -10,5 +10,5 @@ Starting off:
 
 Changelog:
 
-  v1.1 : Added the !vote command
-  v1.0 : Uploaded to GitHub
+  v1.1 Added the !vote command
+  v1.0 Uploaded to GitHub
