@@ -63,7 +63,7 @@ async def cmd_vote(client, msg, cmds):
 		await client.send_message(msg.channel, "`Invalid syntax. Ex: !vote start, !vote yes, !vote no, !vote stop.`")
 		return
 	elif len(voter_id) == 0 and cmds[1] != "start":
-		await client.send_message(msg.channel, "`There is currently no voting occurring right now. Type "!vote start" to start one.`")
+		await client.send_message(msg.channel, "`There is currently no voting occurring right now. Type \"!vote start\" to start one.`")
 
 	# start vote
 	if len(voter_id) == 0 and cmds[1] == "start":
@@ -75,6 +75,7 @@ async def cmd_vote(client, msg, cmds):
 
 	# only the person who started the vote can stop it
 	if (voter_id[0] == "" + msg.author.id) and (cmds[1].lower() == "stop"):
+
 		if voter_id[1] > 0:
 			await client.send_message(msg.channel, "`Yes wins.`")
 		elif voter_id[1] < 0:
@@ -82,8 +83,12 @@ async def cmd_vote(client, msg, cmds):
 		else:
 			await client.send_message(msg.channel, "`Tie.`")
 
+		# remove all elements from list and dictionary to start over
 		del voter_id[:]
+		vote_once.clear()
 		return
+	elif (voter_id[0] != "" + msg.author.id) and (cmds[1].lower() == "stop"):
+		await client.send_message(msg.channel, msg.author.name + "`You are not the vote starter`")
 
 	# if user hasn't cast a vote yet
 	if vote_once.get(msg.author.id) != 1:
@@ -142,6 +147,6 @@ def dl_avatar(url):
 	f.write(raw_data)
 	f.close()
 
-commands =  	{ "!author":cmd_author, "!help":cmd_help, "!hello":cmd_hello, "!flipcoin":cmd_flipCoin, "!rolldie":cmd_rollDie,
-			  "!vote":cmd_vote, "!avatar":cmd_avatar
-		}
+commands =  { "!author":cmd_author, "!help":cmd_help, "!hello":cmd_hello, "!flipcoin":cmd_flipCoin, "!rolldie":cmd_rollDie,
+			  "!vote":cmd_vote, #"!avatar":cmd_avatar
+			}
