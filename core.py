@@ -60,15 +60,17 @@ async def cmd_vote(client, msg, cmds):
 
 	# if user types !vote [insert wrong command here]
 	if cmds[1] != "stop" and cmds[1] != "yes" and cmds[1] != "no" and cmds[1] != "start":
-		await client.send_message(msg.channel, "`Invalid syntax. Needs two arguments.`")
+		await client.send_message(msg.channel, "`Invalid syntax. Ex: !vote start, !vote yes, !vote no, !vote stop.`")
 		return
+	elif len(voter_id) == 0 and cmds[1] != "start":
+		await client.send_message(msg.channel, "`There is currently no voting occurring right now. Type "!vote start" to start one.`")
 
 	# start vote
 	if len(voter_id) == 0 and cmds[1] == "start":
 		voter_id.append(msg.author.id)
 		voter_id.append(0)
 		print(voter_id[0])
-	elif len(voter_id) != 0: #there is a vote already happening
+	elif len(voter_id) != 0 and cmds[1] == "start": #there is a vote already happening
 		await client.send_message(msg.channel, "`A vote is currently going on.`")
 
 	# only the person who started the vote can stop it
@@ -91,11 +93,11 @@ async def cmd_vote(client, msg, cmds):
 		if cmds[1].lower() == "yes":
 			voter_id[1] += 1
 			vote_once[msg.author.id] += 1
-			print("vote count = " + voter_id[1])
+			print("vote count = " + str(voter_id[1]))
 		elif cmds[1].lower() == "no":
-			voter_id[1] += 1
+			voter_id[1] -= 1
 			vote_once[msg.author.id] += 1
-			print("vote count = " + voter_id[1])
+			print("vote count = " + str(voter_id[1]))
 	# if user has already cast a vote
 	elif vote_once.get(msg.author.id) == 1:
 		await client.send_message(msg.channel, "`" + msg.author.name + ", you have already voted.`")
@@ -140,6 +142,6 @@ def dl_avatar(url):
 	f.write(raw_data)
 	f.close()
 
-commands =  { "!author":cmd_author, "!help":cmd_help, "!hello":cmd_hello, "!flipcoin":cmd_flipCoin, "!rolldie":cmd_rollDie,
-			  "!avatar":cmd_avatar, "!vote":cmd_vote
-			}
+commands =  	{ "!author":cmd_author, "!help":cmd_help, "!hello":cmd_hello, "!flipcoin":cmd_flipCoin, "!rolldie":cmd_rollDie,
+			  "!vote":cmd_vote, "!avatar":cmd_avatar
+		}
