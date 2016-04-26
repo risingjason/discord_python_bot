@@ -9,6 +9,7 @@ Starting off:
   4. Update frequently using new_update_command.txt
 
 Changelog:
+  - v1.1.3 Added the !vote command inside the !help text
   - v1.1.2 Fixed dictionary bug
   - v1.1.1 Fixed some bugs on the !vote command
   - v1.1 Added the !vote command
