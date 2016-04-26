@@ -9,6 +9,8 @@ help_msg =  "```+-------------- Chinatown Discord Bot --------------+\n" +\
 			"- !flipcoin : Makes the bot flip a coin.\n" +\
 			"- !rolldie : Makes the bot roll a die.\n" +\
 			"- !avatar : Syntax: !logo @user. Uploads an image file of the mentioned user's logo. (Currently bugged)\n" +\
+			"- !vote [input]: Starts a vote. Only the person who started the vote can stop it.\n" +\
+			"                 Once stopped, it will print yes/no win or tie. Inputs: start, yes, no, stop.\n" +\
 			"- Twitch Emotes have been implemented. Only the first emote of each line will be read in order to reduce spam.\n" +\
 			"+---------------------------------------------------+```"
 

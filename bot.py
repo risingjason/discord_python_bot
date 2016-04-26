@@ -13,7 +13,7 @@ fp_infos.close()
 
 client = discord.Client()
 
-online_message = "```Chinatown Discord Bot v1.1 is now online!\n" +\
+online_message = "```Chinatown Discord Bot v1.1.3 is now online!\n" +\
 				 "Type !help for a list of commands.```"
 
 
