@@ -40,18 +40,71 @@ async def cmd_8ball(client, msg, cmds):
 async def kappaLibrary(client, msg, cmds, word):
 	await client.send_file(msg.channel, './emotes/{}.png'.format(word))
 
-#!rolldie command
-async def cmd_rollDie(client, msg, cmds):
-	die = random.randint(0,5) + 1
-	await client.send_message(msg.channel, threeQ + "You have rolled a {}".format(die) + threeQ)
+#!rolldice command
+async def cmd_rollDice(client, msg, cmds):
+	amount = 1 
+	total = 0
+	invalid = "`You must enter a valid number. (eg 1-5)`"
+	#makes sure the input is a number
+	if len(cmds) == 2:
+		try:
+			amount = int(cmds[1])
+		except:
+			await client.send_message(msg.channel, invalid)
+
+	#checks if amount is from 1-5
+	if amount > 5 or amount < 1:
+		await client.send_message(msg.channel, invalid)
+	else:
+		for amt in range(0,amount):
+			die = roll_dice()
+			#if user did not input a number
+			if amount == 1:
+				await client.send_message(msg.channel, "`You have rolled a {}`".format(die))	
+			
+			await client.send_message(msg.channel, "`Roll number {}: {}`".format(amt+1,die))
+			total += die
+
+		if amount > 1:
+			await client.send_message(msg.channel, "`Total: {}`".format(total))
 
 #!flipcoin command
 async def cmd_flipCoin(client, msg, cmds):
-	coin = random.randint(1,2)
-	if coin == 1:
-		await client.send_message(msg.channel, threeQ + "The coin has flipped to {}.".format("tails") + threeQ)
-	elif coin == 2:
-		await client.send_message(msg.channel, threeQ + "The coin has flipped to {}.".format("heads") + threeQ)
+	win = 0 #heads and tails counter
+	who = "" #puts winner into string
+	amount = 1 #amount of coin flips
+	invalid = "`You must enter a valid number. (eg 1-5)`" #invalid number
+	#make sure user puts a number input, empty input means 1 flip
+	if len(cmds) == 2:
+		try:
+			amount = int(cmds[1])
+		except:
+			await client.send_message(msg.channel, invalid)
+			return
+
+	#only 1-5 coin flips are allowed
+	if amount > 5 or amount < 1:
+		await client.send_message(msg.channel, invalid)
+	else: #flip "amount" number of times
+		for amt in range(0,amount):
+			coin = random.randint(1,2)
+			if coin == 1:
+				win += 1
+				await client.send_message(msg.channel, "`Heads.`" )
+			elif coin == 2:
+				win -= 1
+				await client.send_message(msg.channel, "`Tails.`")
+		#who won
+		if win > 0:
+			who = "Heads"
+		elif win < 0:
+			who = "Tails"
+		elif win == 0:
+			await client.send_message(msg.channel, "`Tie.`")
+			return
+		#if amount = 1, no point of putting who won
+		if amount > 2:
+			await client.send_message(msg.channel, "`{} wins.`".format(who))
 
 #vote command
 async def cmd_vote(client, msg, cmds):
@@ -113,10 +166,10 @@ async def cmd_vote(client, msg, cmds):
 async def cmd_avatar(client, msg, cmds):
 	ments = msg.mentions
 	if len(ments) == 0: #if user !types !logo
-		await client.send_message(msg.channel, "`Invalid syntax. No user mentioned. Correct syntax example: !logo @me`")
+		await client.send_message(msg.channel, "`Invalid syntax. No user mentioned. Correct syntax example: !avatar @me`")
 		return
 	elif len(ments) != 1: #if user mentions more than one person
-		await client.send_message(msg.channel, "`Invalid syntax. Only one user can be mentioned. Correct syntax example: !logo @me`")
+		await client.send_message(msg.channel, "`Invalid syntax. Only one user can be mentioned. Correct syntax example: !avatar @me`")
 		return
 	else: #if user inputs correct syntax
 		mentioned_user = ments[0]
@@ -149,6 +202,11 @@ def dl_avatar(url):
 	f.write(raw_data)
 	f.close()
 
+#roll dice function
+def roll_dice():
+	die = random.randint(0,5) + 1
+	return die
+
 commands =  { "!author":cmd_author, "!help":cmd_help, "!hello":cmd_hello, "!flipcoin":cmd_flipCoin, "!rolldie":cmd_rollDie,
-			  "!vote":cmd_vote, #"!avatar":cmd_avatar
+			  "!vote":cmd_vote, "!avatar":cmd_avatar
 			}

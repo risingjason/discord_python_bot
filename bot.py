@@ -13,8 +13,9 @@ fp_infos.close()
 
 client = discord.Client()
 
-online_message = "```Chinatown Discord Bot v1.1.3 is now online!\n" +\
-				 "Type !help for a list of commands.```"
+online_message = "```Chinatown Discord Bot v1.2 is now online!\n" +\
+				 "Type !help for a list of commands.\n" +\
+				 "Multiple coin flips and dice rolls have been implemented! 5 maximum to reduce spam.```"
 
 
 fp_kappa = open("kappaLibrary.txt", "r")
@@ -28,7 +29,7 @@ async def on_ready():
 	for channel in client.get_all_channels():
 		if channel.type is discord.ChannelType.text: #notifies all registered text channels that the bot is online
 			print("Bot is running on server: {}, name: {}, id: {}, type: {}".format(channel.server, channel.name.encode("utf-8"), channel.id, channel.type))
-			await client.send_message(channel, online_message)
+			#await client.send_message(channel, online_message)
 
 @client.event
 async def on_message(msg):
