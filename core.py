@@ -23,7 +23,6 @@ vote_once = {}
 poker = {}
 challenger = []
 opponent = []
-is_poker_on = 0
 
 #!help command
 async def cmd_help(client, msg, cmds):
