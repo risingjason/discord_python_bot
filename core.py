@@ -59,24 +59,33 @@ async def cmd_vote(client, msg, cmds):
 	if len(cmds) == 1:
 		await client.send_message(msg.channel, "`Invalid syntax. Needs two arguments.`")
 		return
+	
+	word_two = cmds[1].lower()
+	
+	# bot admin can force stop a vote process
+	if word_two != "force" and msg.author.id == "91115380646354944":
+		del voter_id[:]
+		vote_once.clear()
+		return
 
 	# if user types !vote [insert wrong command here]
-	if cmds[1] != "stop" and cmds[1] != "yes" and cmds[1] != "no" and cmds[1] != "start":
+	if word_two != "stop" and word_two != "yes" and word_two != "no" and word_two != "start":
 		await client.send_message(msg.channel, "`Invalid syntax. Ex: !vote start, !vote yes, !vote no, !vote stop.`")
 		return
-	elif len(voter_id) == 0 and cmds[1] != "start":
+	elif len(voter_id) == 0 and word_two != "start":
 		await client.send_message(msg.channel, "`There is currently no voting occurring right now. Type \"!vote start\" to start one.`")
+		return
 
 	# start vote
-	if len(voter_id) == 0 and cmds[1] == "start":
+	if len(voter_id) == 0 and word_two == "start":
 		voter_id.append(msg.author.id)
 		voter_id.append(0)
 		print(voter_id[0])
-	elif len(voter_id) != 0 and cmds[1] == "start": #there is a vote already happening
+	elif len(voter_id) != 0 and word_two == "start": #there is a vote already happening
 		await client.send_message(msg.channel, "`A vote is currently going on.`")
 
 	# only the person who started the vote can stop it
-	if (voter_id[0] == "" + msg.author.id) and (cmds[1].lower() == "stop"):
+	if (voter_id[0] == "" + msg.author.id) and (word_two == "stop"):
 
 		if voter_id[1] > 0:
 			await client.send_message(msg.channel, "`Yes wins.`")
@@ -89,25 +98,27 @@ async def cmd_vote(client, msg, cmds):
 		del voter_id[:]
 		vote_once.clear()
 		return
-	elif (voter_id[0] != "" + msg.author.id) and (cmds[1].lower() == "stop"):
-		await client.send_message(msg.channel, msg.author.name + "`You are not the vote starter`")
+	elif (voter_id[0] != "" + msg.author.id) and (word_two == "stop"):
+		await client.send_message(msg.channel, "`" + msg.author.name + ", you are not the vote starter.`")
+		return
 
 	# if user hasn't cast a vote yet
 	if vote_once.get(msg.author.id) != 1:
 		vote_once.update({msg.author.id : 0})
 		
 		# counts the amount of yes and no vote
-		if cmds[1].lower() == "yes":
+		if word_two == "yes":
 			voter_id[1] += 1
 			vote_once[msg.author.id] += 1
 			print("vote count = " + str(voter_id[1]))
-		elif cmds[1].lower() == "no":
+		elif word_two == "no":
 			voter_id[1] -= 1
 			vote_once[msg.author.id] += 1
 			print("vote count = " + str(voter_id[1]))
 	# if user has already cast a vote
 	elif vote_once.get(msg.author.id) == 1:
 		await client.send_message(msg.channel, "`" + msg.author.name + ", you have already voted.`")
+
 
 #!avatar command
 async def cmd_avatar(client, msg, cmds):
@@ -150,5 +161,5 @@ def dl_avatar(url):
 	f.close()
 
 commands =  { "!author":cmd_author, "!help":cmd_help, "!hello":cmd_hello, "!flipcoin":cmd_flipCoin, "!rolldie":cmd_rollDie,
-			  "!vote":cmd_vote, #"!avatar":cmd_avatar
+			  "!vote":cmd_vote, "!avatar":cmd_avatar
 			}
