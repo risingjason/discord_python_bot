@@ -23,7 +23,6 @@ vote_once = {}
 poker = {}
 challenger = []
 opponent = []
-is_poker_on = 0
 
 #!help command
 async def cmd_help(client, msg, cmds):
@@ -209,19 +208,20 @@ async def cmd_avatar(client, msg, cmds):
 async def cmd_poker(client, msg, cmds):
 	ments = msg.mentions
 
-	 if len(ments) == 0: #if user types !poker
-	 	await client.send_message(msg.channel, "`Invalid syntax. Correct syntax example: !poker @me`")
-	 	return
-	 elif len(ments) != 1: #if user mentions more than one person
-	 	await client.send_message(msg.channel, "`Invalid syntax. Correct syntax example: !poker @me`")
-	 	return
-	 elif len(poker) != 3: #if user inputs correct syntax
-		opponent.append(ments[0].id)
-		challenger.append(msg.author.id)
-		opponent.append(ments[0].name)
-		challenger.append(msg.author.name)
-		poker[challenger[0]] = []
-		poker[opponent[0]] = []
+	if len(poker) != 3:
+		if len(ments) == 0: #if user types !poker
+			await client.send_message(msg.channel, "`Invalid syntax. Correct syntax example: !poker @me`")
+			return
+		elif len(ments) != 1: #if user mentions more than one person
+			await client.send_message(msg.channel, "`Invalid syntax. Correct syntax example: !poker @me`")
+			return
+		else: #if user inputs correct syntax
+			opponent.append(ments[0].id)
+			challenger.append(msg.author.id)
+			opponent.append(ments[0].name)
+			challenger.append(msg.author.name)
+			poker[challenger[0]] = []
+			poker[opponent[0]] = []
 
 	#print(len(poker))
 	if len(poker) == 3:
@@ -267,7 +267,6 @@ def dl_avatar(url):
 	f.write(raw_data)
 	f.close()
 
-<<<<<<< HEAD
 #roll dice function
 def roll_dice():
 	die = random.randint(0,5) + 1
@@ -296,8 +295,4 @@ def poker_print(poker, challenger_name, opponent_name, challenger_id, opponent_i
 
 commands =  { "!author":cmd_author, "!help":cmd_help, "!hello":cmd_hello, "!flipcoin":cmd_flipCoin, "!rolldice":cmd_rollDice,
 			  "!vote":cmd_vote, "!avatar":cmd_avatar, "!poker":cmd_poker
-=======
-commands =  { "!author":cmd_author, "!help":cmd_help, "!hello":cmd_hello, "!flipcoin":cmd_flipCoin, "!rolldie":cmd_rollDie,
-			  "!vote":cmd_vote, "!avatar":cmd_avatar
->>>>>>> refs/remotes/origin/master
 			}
