@@ -15,6 +15,10 @@ client = discord.Client()
 
 online_message = "```Chinatown Discord Bot v1.2 is now online!\n" +\
 				 "Type !help for a list of commands.\n" +\
+<<<<<<< HEAD
+=======
+				 "!avatar is currently disabled due to bugs.\n" +\
+>>>>>>> refs/remotes/origin/master
 				 "Multiple coin flips and dice rolls have been implemented! 5 maximum to reduce spam.```"
 
 
