@@ -13,8 +13,10 @@ fp_infos.close()
 
 client = discord.Client()
 
-online_message = "```Chinatown Discord Bot v1.1.3 is now online!\n" +\
-				 "Type !help for a list of commands.```"
+online_message = "```Chinatown Discord Bot v1.2 is now online!\n" +\
+				 "Type !help for a list of commands.\n" +\
+				 "!avatar is currently disabled due to bugs.\n" +\
+				 "Multiple coin flips and dice rolls have been implemented! 5 maximum to reduce spam.```"
 
 
 fp_kappa = open("kappaLibrary.txt", "r")
