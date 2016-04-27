@@ -7,7 +7,7 @@ help_msg =  "```+-------------- Chinatown Discord Bot --------------+\n" +\
 			"- !author: Gives the name of the creator of this bot.\n" +\
 			"- !hello: Bot says hi to you.\n" +\
 			"- !flipcoin : Makes the bot flip a coin.\n" +\
-			"- !rolldie : Makes the bot roll a die.\n" +\
+			"- !rolldice : Makes the bot roll a die.\n" +\
 			"- !avatar : Syntax: !logo @user. Uploads an image file of the mentioned user's logo. (Currently bugged)\n" +\
 			"- !vote [input]: Starts a vote. Only the person who started the vote can stop it.\n" +\
 			"                 Once stopped, it will print yes/no win or tie. Inputs: start, yes, no, stop.\n" +\
@@ -19,6 +19,11 @@ author = "Jason Zhang"
 
 voter_id = []
 vote_once = {}
+
+poker = {}
+challenger = []
+opponent = []
+is_poker_on = 0
 
 #!help command
 async def cmd_help(client, msg, cmds):
@@ -40,18 +45,71 @@ async def cmd_8ball(client, msg, cmds):
 async def kappaLibrary(client, msg, cmds, word):
 	await client.send_file(msg.channel, './emotes/{}.png'.format(word))
 
-#!rolldie command
-async def cmd_rollDie(client, msg, cmds):
-	die = random.randint(0,5) + 1
-	await client.send_message(msg.channel, threeQ + "You have rolled a {}".format(die) + threeQ)
+#!rolldice command
+async def cmd_rollDice(client, msg, cmds):
+	amount = 1 
+	total = 0
+	invalid = "`You must enter a valid number. (eg 1-5)`"
+	#makes sure the input is a number
+	if len(cmds) == 2:
+		try:
+			amount = int(cmds[1])
+		except:
+			await client.send_message(msg.channel, invalid)
+
+	#checks if amount is from 1-5
+	if amount > 5 or amount < 1:
+		await client.send_message(msg.channel, invalid)
+	else:
+		for amt in range(0,amount):
+			die = roll_dice()
+			#if user did not input a number
+			if amount == 1:
+				await client.send_message(msg.channel, "`You have rolled a {}`".format(die))	
+			
+			await client.send_message(msg.channel, "`Roll number {}: {}`".format(amt+1,die))
+			total += die
+
+		if amount > 1:
+			await client.send_message(msg.channel, "`Total: {}`".format(total))
 
 #!flipcoin command
 async def cmd_flipCoin(client, msg, cmds):
-	coin = random.randint(1,2)
-	if coin == 1:
-		await client.send_message(msg.channel, threeQ + "The coin has flipped to {}.".format("tails") + threeQ)
-	elif coin == 2:
-		await client.send_message(msg.channel, threeQ + "The coin has flipped to {}.".format("heads") + threeQ)
+	win = 0 #heads and tails counter
+	who = "" #puts winner into string
+	amount = 1 #amount of coin flips
+	invalid = "`You must enter a valid number. (eg 1-5)`" #invalid number
+	#make sure user puts a number input, empty input means 1 flip
+	if len(cmds) == 2:
+		try:
+			amount = int(cmds[1])
+		except:
+			await client.send_message(msg.channel, invalid)
+			return
+
+	#only 1-5 coin flips are allowed
+	if amount > 5 or amount < 1:
+		await client.send_message(msg.channel, invalid)
+	else: #flip "amount" number of times
+		for amt in range(0,amount):
+			coin = random.randint(1,2)
+			if coin == 1:
+				win += 1
+				await client.send_message(msg.channel, "`Heads.`" )
+			elif coin == 2:
+				win -= 1
+				await client.send_message(msg.channel, "`Tails.`")
+		#who won
+		if win > 0:
+			who = "Heads"
+		elif win < 0:
+			who = "Tails"
+		elif win == 0:
+			await client.send_message(msg.channel, "`Tie.`")
+			return
+		#if amount = 1, no point of putting who won
+		if amount > 2:
+			await client.send_message(msg.channel, "`{} wins.`".format(who))
 
 #vote command
 async def cmd_vote(client, msg, cmds):
@@ -124,10 +182,10 @@ async def cmd_vote(client, msg, cmds):
 async def cmd_avatar(client, msg, cmds):
 	ments = msg.mentions
 	if len(ments) == 0: #if user !types !logo
-		await client.send_message(msg.channel, "`Invalid syntax. No user mentioned. Correct syntax example: !logo @me`")
+		await client.send_message(msg.channel, "`Invalid syntax. No user mentioned. Correct syntax example: !avatar @me`")
 		return
 	elif len(ments) != 1: #if user mentions more than one person
-		await client.send_message(msg.channel, "`Invalid syntax. Only one user can be mentioned. Correct syntax example: !logo @me`")
+		await client.send_message(msg.channel, "`Invalid syntax. Only one user can be mentioned. Correct syntax example: !avatar @me`")
 		return
 	else: #if user inputs correct syntax
 		mentioned_user = ments[0]
@@ -148,6 +206,55 @@ async def cmd_avatar(client, msg, cmds):
 		await client.send_message(msg.channel, "`Here is the logo for {}`".format(mentioned_user.name))
 		await client.send_file(msg.channel, './avatar/logo.jpg')
 
+async def cmd_poker(client, msg, cmds):
+	ments = msg.mentions
+
+	 if len(ments) == 0: #if user types !poker
+	 	await client.send_message(msg.channel, "`Invalid syntax. Correct syntax example: !poker @me`")
+	 	return
+	 elif len(ments) != 1: #if user mentions more than one person
+	 	await client.send_message(msg.channel, "`Invalid syntax. Correct syntax example: !poker @me`")
+	 	return
+	 elif len(poker) != 3: #if user inputs correct syntax
+		opponent.append(ments[0].id)
+		challenger.append(msg.author.id)
+		opponent.append(ments[0].name)
+		challenger.append(msg.author.name)
+		poker[challenger[0]] = []
+		poker[opponent[0]] = []
+
+	#print(len(poker))
+	if len(poker) == 3:
+		print(msg.author.id)
+		print(challenger[1])
+		print(opponent[1])
+		if msg.author.id == challenger[0]:
+			for i in range(2,len(cmds)):
+				poker[challenger[0]][int(cmds[i])-1] = roll_dice()
+		if msg.author.id == opponent[0]:
+			for i in range(2,len(cmds)):
+				poker[opponent[0]][int(cmds[i])-1] = roll_dice()
+	elif len(poker) == 2:
+		poker['is_poker_on'] = 1
+		#initalizes both lists to [0,0,0,0,0]
+		for i in range(0,5):
+			poker[challenger[0]].append(0)
+			poker[opponent[0]].append(0)
+			#print("Challenger: " + str(poker[challenger][i]))
+			#print("Opponent: " + str(poker[opponent][i]))
+
+		#makes first roll for both lists
+		for i in range(0,5):
+			poker[challenger[0]][i] = roll_dice()
+			poker[opponent[0]][i] = roll_dice()
+			#print("Challenger rolls: " + str(poker[challenger][i]))
+			#print("Opponent rolls: " + str(poker[opponent][i]))
+
+	#print(len(poker))
+	poker_print(poker, challenger[1], opponent[1], challenger[0], opponent[0])
+	
+
+
 #downloads the logo used in cmd_logo
 def dl_avatar(url):
 	#prevents HTTP access denied error
@@ -160,6 +267,37 @@ def dl_avatar(url):
 	f.write(raw_data)
 	f.close()
 
+<<<<<<< HEAD
+#roll dice function
+def roll_dice():
+	die = random.randint(0,5) + 1
+	return die
+
+#prints poker dice
+def poker_print(poker, challenger_name, opponent_name, challenger_id, opponent_id):
+	#puts all rolls in a string
+	tab_space = 30
+	roll_chal = challenger_name
+	roll_opp = opponent_name
+	print("Dice                          1 2 3 4 5\n")
+	for i in range(len(roll_chal),30):
+		roll_chal += " "
+
+	for i in range(len(roll_opp),30):
+		roll_opp += " "
+
+	for i in range(0,5):
+		roll_chal = roll_chal + str(poker[challenger_id][i]) + " "
+		roll_opp = roll_opp + str(poker[opponent_id][i]) + " "
+	print(roll_chal)
+	print(roll_opp)
+
+	return
+
+commands =  { "!author":cmd_author, "!help":cmd_help, "!hello":cmd_hello, "!flipcoin":cmd_flipCoin, "!rolldice":cmd_rollDice,
+			  "!vote":cmd_vote, "!avatar":cmd_avatar, "!poker":cmd_poker
+=======
 commands =  { "!author":cmd_author, "!help":cmd_help, "!hello":cmd_hello, "!flipcoin":cmd_flipCoin, "!rolldie":cmd_rollDie,
 			  "!vote":cmd_vote, "!avatar":cmd_avatar
+>>>>>>> refs/remotes/origin/master
 			}
