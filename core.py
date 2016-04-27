@@ -296,8 +296,4 @@ def poker_print(poker, challenger_name, opponent_name, challenger_id, opponent_i
 
 commands =  { "!author":cmd_author, "!help":cmd_help, "!hello":cmd_hello, "!flipcoin":cmd_flipCoin, "!rolldice":cmd_rollDice,
 			  "!vote":cmd_vote, "!avatar":cmd_avatar, "!poker":cmd_poker
-=======
-commands =  { "!author":cmd_author, "!help":cmd_help, "!hello":cmd_hello, "!flipcoin":cmd_flipCoin, "!rolldie":cmd_rollDie,
-			  "!vote":cmd_vote, "!avatar":cmd_avatar
->>>>>>> refs/remotes/origin/master
 			}
