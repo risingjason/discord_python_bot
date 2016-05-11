@@ -120,7 +120,7 @@ async def cmd_vote(client, msg, cmds):
 	word_two = cmds[1].lower()
 	
 	# bot admin can force stop a vote process
-	if word_two != "force" and msg.author.id == "91115380646354944":
+	if word_two == "force" and msg.author.id == "91115380646354944":
 		del voter_id[:]
 		vote_once.clear()
 		return
@@ -207,7 +207,7 @@ async def cmd_avatar(client, msg, cmds):
 
 async def cmd_poker(client, msg, cmds):
 	ments = msg.mentions
-
+	#challenger is the initializer of the poker game and the opponent is the person who is mentioned by challenger
 	if len(poker) != 3:
 		if len(ments) == 0: #if user types !poker
 			await client.send_message(msg.channel, "`Invalid syntax. Correct syntax example: !poker @me`")
@@ -216,6 +216,7 @@ async def cmd_poker(client, msg, cmds):
 			await client.send_message(msg.channel, "`Invalid syntax. Correct syntax example: !poker @me`")
 			return
 		else: #if user inputs correct syntax
+			#starts game here / game is initalized
 			opponent.append(ments[0].id)
 			challenger.append(msg.author.id)
 			opponent.append(ments[0].name)
@@ -228,11 +229,14 @@ async def cmd_poker(client, msg, cmds):
 		print(msg.author.id)
 		print(challenger[1])
 		print(opponent[1])
+		#initiates rerolls used by !poker reroll [1 2 3 4 5]
 		if msg.author.id == challenger[0]:
 			for i in range(2,len(cmds)):
+				#challenger rerolls
 				poker[challenger[0]][int(cmds[i])-1] = roll_dice()
 		if msg.author.id == opponent[0]:
 			for i in range(2,len(cmds)):
+				#opponent rerolls
 				poker[opponent[0]][int(cmds[i])-1] = roll_dice()
 	elif len(poker) == 2:
 		poker['is_poker_on'] = 1
