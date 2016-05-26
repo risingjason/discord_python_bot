@@ -1,6 +1,6 @@
 # discord_python_bot
 Jason Zhang's Discord Bot using Python
-You are currently using version 1.1
+You are currently using version 1.2.1
 
 Starting off:
   1. You must have the discord.py api downloaded. (Link here: https://github.com/Rapptz/discord.py/tree/async)
